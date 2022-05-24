@@ -1,4 +1,4 @@
-package com.neonq;
+package com.neonq.inventory;
 
 
 import org.springframework.boot.SpringApplication;

@@ -1,6 +1,6 @@
-package com.neonq.dao;
+package com.neonq.inventory.dao;
 
-import com.neonq.model.Product;
+import com.neonq.inventory.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package com.neonq.model;
+package com.neonq.inventory.model;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,8 +1,8 @@
-package com.neonq.controller;
+package com.neonq.inventory.controller;
 
-import com.neonq.model.Product;
-import com.neonq.dto.ResponseMessage;
-import com.neonq.service.ProductService;
+import com.neonq.inventory.dto.ResponseMessage;
+import com.neonq.inventory.model.Product;
+import com.neonq.inventory.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;

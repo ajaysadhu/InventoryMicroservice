@@ -1,4 +1,4 @@
-package com.neonq.dto;
+package com.neonq.inventory.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package com.neonq.service;
+package com.neonq.inventory.service;
 
-import com.neonq.dao.ProductDAO;
-import com.neonq.model.Product;
+import com.neonq.inventory.dao.ProductDAO;
+import com.neonq.inventory.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
