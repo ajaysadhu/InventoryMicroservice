@@ -1,2 +1,4 @@
 # InventoryMicroservice
-Taking care of Inventory Stock for Products
+Inventory Management Service
+
+Swagger: http://localhost:9000/swagger-ui.html

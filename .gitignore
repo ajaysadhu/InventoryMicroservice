@@ -10,6 +10,12 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+#Temporary Application Files
+.DS_STORE
+target/
+data/
+.idea/
+
 # Package Files #
 *.jar
 *.war
