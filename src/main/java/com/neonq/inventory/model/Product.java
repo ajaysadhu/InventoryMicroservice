@@ -1,5 +1,6 @@
 package com.neonq.inventory.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,8 +20,8 @@ public class Product {
     @Column(name = "id")
     private Long id;
 
-    //@JsonBackReference
-    @Column(name="category")
+    @ManyToOne
+    @JoinColumn (name = "category_id", nullable = false)
     private ProductCategory category;
 
     @Column(name = "sku")
@@ -30,7 +31,7 @@ public class Product {
     private String name;
 
     @Column(name = "description")
-    private String desc;
+    private String description;
 
     @Column(name = "unit_price")
     private BigDecimal unitPrice;

@@ -1,0 +1,242 @@
+{
+	"info": {
+		"_postman_id": "2c2f4b6c-14d0-49c6-a184-d9ca49720cb1",
+		"name": "Inventory Microservice POSTMAN Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20070422"
+	},
+	"item": [
+		{
+			"name": "Delete an Existing Product",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/products/16",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"products",
+						"16"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get an Existing Product By Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/products/47",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"products",
+						"47"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get an Existing Product Categories",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/products/47",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"products",
+						"47"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update an Existing Product",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n    \"sku\": \"GAME-TECH-1012\",\n    \"name\": \"Chess GM1\",\n    \"description\": \"Chess\",\n    \"unitPrice\": 25,\n    \"imageUrl\": \"https://media.wired.com/photos/6035838c75e03e5fbfff9da1/1:1/w_1602,h_1602,c_limit/Gear-Chess-1216924256.jpg\",\n    \"active\": 1,\n    \"unitsInStock\": 100,\n    \"category\":\"CHESS\"\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/products/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"products",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search for Books",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/products?search=Chess&currentPage=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"products"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "Chess"
+						},
+						{
+							"key": "currentPage",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search for Category",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/products?search=Chess&currentPage=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"products"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "Chess"
+						},
+						{
+							"key": "currentPage",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n    \"sku\": \"GAME-TECH-1002\",\n    \"name\": \"Chess GM1\",\n    \"description\": \"Chess\",\n    \"unitPrice\": 25,\n    \"imageUrl\": \"https://media.wired.com/photos/6035838c75e03e5fbfff9da1/1:1/w_1602,h_1602,c_limit/Gear-Chess-1216924256.jpg\",\n    \"active\": 1,\n    \"unitsInStock\": 100,\n    \"category\":\"CHESS\"\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
