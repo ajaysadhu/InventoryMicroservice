@@ -1,105 +1,76 @@
 package com.neonq.inventory.controller;
 
-import com.neonq.inventory.dto.ProductCategoryResponse;
-import com.neonq.inventory.dto.ProductRequestDTO;
-import com.neonq.inventory.dto.ResponseMessage;
+import com.neonq.inventory.dto.PageableProductDTO;
+import com.neonq.inventory.dto.ProductCategoryDTO;
+import com.neonq.inventory.dto.ProductDTO;
+import com.neonq.inventory.exception.ResourceNotFoundException;
 import com.neonq.inventory.model.Product;
-import com.neonq.inventory.model.ProductCategory;
+import com.neonq.inventory.service.ProductCategoryService;
 import com.neonq.inventory.service.ProductService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/inventory/v1/")
 public class ProductController {
 
     @Autowired
-    ProductService pService;
+    ProductService productService;
 
-    /**
-     * \
-     * http://localhost:9090/products?search=word - Request Parameter
-     * http://localhost:9090/products/123 Path Variable
-     */
+    @Autowired
+    ProductCategoryService productCategoryService;
+
     // Read
-    @GetMapping("/{id}")
-    public Product getProduct(@PathVariable long id) {
-        if (pService.getProduct(id).isPresent()) {
-            return pService.getProduct(id).get();
-        } else {
-            throw new RuntimeException("Product Id does not exist");
-        }
-
+    @GetMapping("/products/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable long id) throws ResourceNotFoundException {
+        return new ResponseEntity<>(productService.getProductById(id), HttpStatus.OK);
     }
 
-    // Get All Product Categories
+    @GetMapping("/products/search")
+    public ResponseEntity<PageableProductDTO> getProducts(@RequestParam String keyword, @RequestParam int currentPage, @RequestParam int pageSize) {
+        return new ResponseEntity<>(productService.getProductsBySearchKeyword(keyword, currentPage-1, pageSize), HttpStatus.OK);
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity<PageableProductDTO> getProductsPerPage(@RequestParam int currentPage, @RequestParam int pageSize, @RequestParam(required= false) String sortBy) {
+        return new ResponseEntity<>(productService.getProductsPerPage(currentPage-1, pageSize, sortBy), HttpStatus.OK);
+    }
+
+    // Create product
+    @PostMapping("/product")
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody @NotNull ProductDTO product) throws ResourceNotFoundException {
+        return new ResponseEntity<>(productService.createProduct(product), HttpStatus.CREATED);
+    }
+
+    // Update products
+    @PutMapping("products/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) throws RuntimeException, ResourceNotFoundException {
+        return new ResponseEntity<>(productService.updateProduct(id, productDTO), HttpStatus.OK);
+    }
+
+    //Delete products
+    @DeleteMapping(value = "products/{id}")
+    public ResponseEntity<Long> deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // Get all product categories
     @GetMapping("/categories")
-    public ProductCategoryResponse getAllProductCategories() {
-        return pService.getAllCategories();
-
+    public ResponseEntity<List<ProductCategoryDTO>> getAllProductCategories() {
+        return new ResponseEntity<>(productCategoryService.getAllCategories(), HttpStatus.OK);
     }
 
-    @GetMapping
-    public Page<Product> getProduct(@RequestParam(required = false) String search, @RequestParam(required = false) String category, @RequestParam(required = true) Integer currentPage) {
-        Page<Product> page = null;
-
-        if (!StringUtils.hasText(search) && !StringUtils.hasText(category)) {
-            page = pService.getProductsByPageNum(currentPage - 1);
-        } else if (!StringUtils.hasText(search) && StringUtils.hasText(category)) {
-            page = pService.getProductsByCat(category, currentPage - 1);
-        } else if (StringUtils.hasText(search) && !StringUtils.hasText(category)) {
-            page = pService.getProductsBySearchKeyword(search, currentPage - 1);
-        }
-        return page;
-    }
-
-
-    // Create
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public Product newProduct(@RequestBody @NotNull ProductRequestDTO product) {
-        ProductCategory prodCat = pService.createProdCatIfAbsent(product.getCategory().toUpperCase());
-        return pService.createProduct(product, prodCat);
-
-    }
-
-    // Update
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public Product updateProduct(@PathVariable long id, @RequestBody ProductRequestDTO product) throws RuntimeException {
-        Optional<Product> productFromDB = pService.getProduct(id);
-        if (productFromDB.isPresent() && productFromDB.get().getName().equalsIgnoreCase(product.getName())) {
-            // Add Product Category
-            return pService.updateProduct(productFromDB.get(), product);
-        } else {
-            throw new RuntimeException("Product Name cannot be updated");
-        }
-    }
-
-    //Delete
-    @DeleteMapping(value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseMessage deleteProduct(@PathVariable long id) {
-        Optional<Product> productFromDB = pService.getProduct(id);
-        if (productFromDB.isPresent()) {
-            boolean success = pService.deleteProduct(productFromDB.get());
-            if (success) {
-                return new ResponseMessage(id + " Successfully Deleted", false);
-            } else {
-                return new ResponseMessage(id + " Cannot Delete Product, Check Connection/Permissions", true);
-            }
-
-        } else {
-            return new ResponseMessage("Product Information is wrong", true);
-        }
+    // Create new product category
+    @PostMapping("/category")
+    public ResponseEntity<ProductCategoryDTO> createProductCategory(@RequestBody ProductCategoryDTO categoryDTO) {
+        return new ResponseEntity<>(productCategoryService.createProductCategory(categoryDTO), HttpStatus.CREATED);
     }
 
 }

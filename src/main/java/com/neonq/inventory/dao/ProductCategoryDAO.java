@@ -9,10 +9,4 @@ import java.util.List;
 
 public interface ProductCategoryDAO extends JpaRepository<ProductCategory, Long> {
 
-    public List<ProductCategory> findById(@Param("id") Integer id);
-
-    public List<ProductCategory> findByCategoryName(@Param("categoryName") String categoryName);
-
-    @Query("select distinct a.categoryName from ProductCategory  a")
-    public List<String> findAllCategories();
 }
