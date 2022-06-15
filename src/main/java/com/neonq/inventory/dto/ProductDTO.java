@@ -1,18 +1,19 @@
 package com.neonq.inventory.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
-@Getter
 @Setter
-@AllArgsConstructor
-public class ProductRequestDTO {
+@Getter
+@ToString
+public class ProductDTO {
 
-    private String category;
+    private Long id;
+
+    private ProductCategoryDTO category;
 
     private String sku;
 
@@ -27,9 +28,4 @@ public class ProductRequestDTO {
     private boolean active;
 
     private int unitsInStock;
-
-    private Date dateCreated;
-
-    private Date lastUpdated;
-
 }

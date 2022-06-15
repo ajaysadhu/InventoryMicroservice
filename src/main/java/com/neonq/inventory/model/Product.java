@@ -1,26 +1,26 @@
 package com.neonq.inventory.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Getter
 @Setter
 @Entity
 @Table(name="product")
-public class Product {
+public class Product extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn (name = "category_id", nullable = false)
     private ProductCategory category;
 
@@ -44,15 +44,5 @@ public class Product {
 
     @Column(name = "units_in_stock")
     private int unitsInStock;
-
-    @CreationTimestamp
-    @Column(name = "date_created")
-    private Date dateCreated;
-
-    @UpdateTimestamp
-    @Column(name = "last_updated")
-    private Date lastUpdated;
-
-
 
 }
