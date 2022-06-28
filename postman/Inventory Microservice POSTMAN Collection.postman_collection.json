@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "c78c63f8-0332-49f8-8526-e5119dbe3b3d",
+		"_postman_id": "2c2f4b6c-14d0-49c6-a184-d9ca49720cb1",
 		"name": "Inventory Microservice POSTMAN Collection",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20070422"
 	},
 	"item": [
 		{
@@ -52,24 +53,22 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:9000/inventory/v1/products/3",
+					"raw": "http://localhost:9090/products/47",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9000",
+					"port": "9090",
 					"path": [
-						"inventory",
-						"v1",
 						"products",
-						"3"
+						"47"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get Product Categories",
+			"name": "Get an Existing Product Categories",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -86,16 +85,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:9000/inventory/v1/categories",
+					"raw": "http://localhost:9090/products/47",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "9000",
+					"port": "9090",
 					"path": [
-						"inventory",
-						"v1",
-						"categories"
+						"products",
+						"47"
 					]
 				}
 			},
@@ -131,7 +129,7 @@
 			"response": []
 		},
 		{
-			"name": "Get Products",
+			"name": "Search for Books",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -148,29 +146,23 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:9000/inventory/v1/products?currentPage=1&pageSize=5&sortBy=name",
+					"raw": "http://localhost:9000/products?search=Chess&currentPage=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "9000",
 					"path": [
-						"inventory",
-						"v1",
 						"products"
 					],
 					"query": [
 						{
+							"key": "search",
+							"value": "Chess"
+						},
+						{
 							"key": "currentPage",
 							"value": "1"
-						},
-						{
-							"key": "pageSize",
-							"value": "5"
-						},
-						{
-							"key": "sortBy",
-							"value": "name"
 						}
 					]
 				}
@@ -178,7 +170,7 @@
 			"response": []
 		},
 		{
-			"name": "Search for Products with keywords",
+			"name": "Search for Category",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -195,30 +187,23 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:9000/inventory/v1/products/search?keyword=Alchemist&currentPage=1&pageSize=5",
+					"raw": "http://localhost:9000/products?search=Chess&currentPage=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "9000",
 					"path": [
-						"inventory",
-						"v1",
-						"products",
-						"search"
+						"products"
 					],
 					"query": [
 						{
-							"key": "keyword",
-							"value": "Alchemist"
+							"key": "search",
+							"value": "Chess"
 						},
 						{
 							"key": "currentPage",
 							"value": "1"
-						},
-						{
-							"key": "pageSize",
-							"value": "5"
 						}
 					]
 				}
@@ -232,7 +217,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": " {\n    \"sku\": \"BOOK-TECH-1001\",\n    \"name\": \"Blockchain\",\n    \"description\": \"Blockchain for dummies\",\n    \"unitPrice\": 600.00,\n    \"imageUrl\": \"https://media.wired.com/photos/6035838c75e03e5fbfff9da1/1:1/w_1602,h_1602,c_limit/Gear-Chess-1216924256.jpg\",\n    \"active\": 1,\n    \"unitsInStock\": 1200,\n    \"category\":{\n        \"id\": 2,\n        \"categoryName\": \"Books\"\n    }\n  }",
+					"raw": " {\n    \"sku\": \"GAME-TECH-1002\",\n    \"name\": \"Chess GM1\",\n    \"description\": \"Chess\",\n    \"unitPrice\": 25,\n    \"imageUrl\": \"https://media.wired.com/photos/6035838c75e03e5fbfff9da1/1:1/w_1602,h_1602,c_limit/Gear-Chess-1216924256.jpg\",\n    \"active\": 1,\n    \"unitsInStock\": 100,\n    \"category\": {\n        \"id\": \"1\",\n        \"categoryName\":\"CHESS\"\n    }\n  }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -256,13 +241,13 @@
 			"response": []
 		},
 		{
-			"name": "Create Product Category",
+			"name": "Create a Product Category",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"categoryName\": \"Board Games\"\n}",
+					"raw": "{\n    \"categoryName\": \"MOVIES\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -280,6 +265,57 @@
 						"inventory",
 						"v1",
 						"category"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Product Category - Validation Error",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"categoryName1\": \"ELECTRONICS\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/inventory/v1/category",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"inventory",
+						"v1",
+						"category"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/inventory/v1/categories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"inventory",
+						"v1",
+						"categories"
 					]
 				}
 			},
