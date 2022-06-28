@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface ProductCategoryDAO extends JpaRepository<ProductCategory, Long> {
 
+    List<ProductCategory> findByCategoryName(String category);
 }
