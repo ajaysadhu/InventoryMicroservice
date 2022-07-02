@@ -1,6 +1,6 @@
 package com.neonq.inventory.exception;
 
-public class ResourceNotFoundException extends Exception{
+public class ResourceNotFoundException extends RuntimeException{
 
     private static final long serialVersionUID = 5201532697764373586L;
 

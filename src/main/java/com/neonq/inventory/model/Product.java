@@ -4,12 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.OptimisticLockType;
+import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.SelectBeforeUpdate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name="product")
 public class Product extends Auditable{
@@ -23,6 +28,10 @@ public class Product extends Auditable{
     @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn (name = "category_id", nullable = false)
     private ProductCategory category;
+
+    @Version
+    @Column(name = "version")
+    private Short version;
 
     @Column(name = "sku")
     private String sku;
