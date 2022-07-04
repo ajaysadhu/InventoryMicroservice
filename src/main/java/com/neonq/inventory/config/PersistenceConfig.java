@@ -15,8 +15,5 @@ public class PersistenceConfig {
     public AuditorAware<String> auditorAware() {
         return new AuditorAwareImpl();
     }
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
+
 }

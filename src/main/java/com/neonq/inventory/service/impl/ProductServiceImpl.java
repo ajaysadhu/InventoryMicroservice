@@ -13,22 +13,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
-import java.time.Clock;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
@@ -118,7 +114,7 @@ public class ProductServiceImpl implements ProductService {
             throw new ResourceNotFoundException("Product Id passed doesn't exist");
         }
         if (!categoryOptional.isPresent()) {
-            throw new ResourceNotFoundException("Product Category Id passed doesn't exist");
+            throw new ResourceNotFoundException("Product Category Id doesn't exist");
         }
         ProductCategory newProductCategory = categoryOptional.get();
         Product productToUpdate = existingOptional.get();
@@ -134,13 +130,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional
-    @Retryable( value =Exception.class, maxAttemptsExpression = "${retry.maxAttempts}",
-            backoff = @Backoff(delayExpression = "${retry.maxDelay}"))
-    public ProductDTO orderProduct(String sku, int quantity) {
+    //@Async("threadPoolExecutor")
+    public CompletableFuture<ProductDTO> orderProduct(String sku, int quantity) {
+        //    public ProductDTO orderProduct(String sku, int quantity) {
         counter++;
-        log.info("Counter "+ counter);
+        log.info("Counter " + counter);
+        log.info("Running in a thread");
         //  throw new RuntimeException();
-        Product product = productDAO.findBySku(sku);
+        Product product = null;
+        try {
+            product = productDAO.findBySku(sku);
+        } catch (Exception ex) {
+            log.error("Error at finfBySku {}", ex);
+
+        }
         if (product == null) {
             throw new ResourceNotFoundException("Product passed doesn't exist");
         }
@@ -153,21 +156,60 @@ public class ProductServiceImpl implements ProductService {
                 Thread.sleep(2000);
                 productModel = productDAO.save(product);
                 System.out.println("saved" + counter);
-            } catch (ObjectOptimisticLockingFailureException exception) {
-                log.info("Locking Exception: "+exception.getMessage());
-                throw exception;
-            } catch (InterruptedException e) {
+            }
+         catch (InterruptedException e) {
                 log.info("Interruped Exception: "+e.getMessage());
                 throw new RuntimeException(e);
-            } catch(Exception ex) {
-                log.info("Some other Exception"+ex.getMessage());
+            }  catch (Exception e) {
+                log.error("Some Exception", e.getMessage());
+            }
+
+        } else {
+            throw new ResourceNotFoundException("Product quantity problem");
+        }
+
+        //return modelMapper.map(product, ProductDTO.class);
+
+        return CompletableFuture.completedFuture(modelMapper.map(productModel, ProductDTO.class));
+    }
+
+    @Override
+    public ProductDTO retryableTestMethod(String skuName) {
+        log.info(skuName);
+        if (skuName.equals("abc")) {
+            throw new IllegalArgumentException();
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    @Transactional
+    @Override
+    public String orderProductById(Long productId, int quantity) throws InterruptedException {
+        Product product = null;
+        try {
+            product = productDAO.findById(productId).get();
+        } catch (Exception ex) {
+            log.error("Error at finding Product {}", ex);
+
+        }
+        if (product == null) {
+            throw new ResourceNotFoundException("Product passed doesn't exist");
+        }
+        int unitsInStock = product.getUnitsInStock();
+        if (unitsInStock >= quantity) {
+            System.out.println("new quantity::" + (unitsInStock - quantity));
+            try {
+                product.setUnitsInStock(unitsInStock - quantity);
+            } catch (Exception e) {
+                log.error("Some Exception", e.getMessage());
             }
         } else {
             throw new ResourceNotFoundException("Product quantity problem");
         }
-        return modelMapper.map(productModel, ProductDTO.class);
+        Thread.sleep(2000);
+        return "Success";
     }
-
 
 
     @Override

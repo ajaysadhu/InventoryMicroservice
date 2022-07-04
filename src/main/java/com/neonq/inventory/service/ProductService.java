@@ -1,15 +1,11 @@
 package com.neonq.inventory.service;
 
-import com.neonq.inventory.dao.ProductDAO;
 import com.neonq.inventory.dto.PageableProductDTO;
 import com.neonq.inventory.dto.ProductDTO;
-import com.neonq.inventory.exception.ResourceNotFoundException;
 import com.neonq.inventory.model.Product;
-import com.neonq.inventory.model.ProductCategory;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 
-import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
 
 
 public interface ProductService extends Runnable {
@@ -26,6 +22,13 @@ public interface ProductService extends Runnable {
 
     ProductDTO updateProduct(Long id, ProductDTO productDTO) ;
 
+    CompletableFuture<ProductDTO> orderProduct(String sku, int quantity) ;
 
-    ProductDTO orderProduct(String sku, int quntity) ;
+    // ProductDTO orderProduct(String sku, int quantity) ;
+
+    @Retryable(include = Exception.class, exclude = IllegalStateException.class,
+            maxAttempts = 5)
+    ProductDTO retryableTestMethod(String skuName);
+
+    String orderProductById(Long productId, int quantity) throws InterruptedException;
 }

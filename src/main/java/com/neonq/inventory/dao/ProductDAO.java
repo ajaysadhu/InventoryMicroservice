@@ -15,6 +15,6 @@ public interface ProductDAO extends JpaRepository<Product, Long> {
 
     @Query("FROM Product p WHERE p.name like %:keyword% or p.category.categoryName like %:keyword%")
     Page<Product> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
+
     Product  findBySku(String sku);
 }

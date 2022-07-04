@@ -1,33 +1,28 @@
 package com.neonq.inventory.controller;
 
-import com.neonq.inventory.dto.PageableProductDTO;
-import com.neonq.inventory.dto.ProductCategoryDTO;
-import com.neonq.inventory.dto.ProductDTO;
-import com.neonq.inventory.exception.ResourceExistsWarning;
+import com.neonq.inventory.dto.*;
 import com.neonq.inventory.exception.ResourceNotFoundException;
 import com.neonq.inventory.model.Product;
 import com.neonq.inventory.service.ProductCategoryService;
+import com.neonq.inventory.service.ProductOrderHelper;
 import com.neonq.inventory.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 
 @RestController
 @RequestMapping("/inventory/v1/")
+@Slf4j
 public class ProductController {
 
     @Autowired
@@ -35,6 +30,9 @@ public class ProductController {
 
     @Autowired
     ProductCategoryService productCategoryService;
+
+    @Autowired
+    ProductOrderHelper productOrderHelper;
 
     // Read
     @GetMapping("/products/{id}")
@@ -91,8 +89,7 @@ public class ProductController {
 
     // Multiple instances
     //If 2 users are requiring chess product of quantity 4.
-    // Spring @Transactional and JPA Locks (Optimistic Locks/ Pessimistic Locks).
-    // Read lock, write_lock
+    // Spring @Transactional and JPA Locks (Optimistic Locks/ Pessimistic Locks)
     // findBySku(String skuName)
     // updateQuantityForId()
 
@@ -100,11 +97,32 @@ public class ProductController {
     // Retry the same call to deduct quantity for the product like 4 times. Delay option for every retry.
     // Circuit Breaker is design pattern which is implemented with Spring Retry.
     @PostMapping("/product/order")
-    public ResponseEntity<ProductDTO> orderProductBySkuName(@RequestParam String skuName,@RequestParam int quantity )  {
-        System.out.println(LocalDateTime.now());
-        System.out.println("test");
-        return new  ResponseEntity<>(productService.orderProduct(skuName,quantity),HttpStatus.OK);
+    public ResponseEntity orderProductBySkuName(@RequestParam String skuName, @RequestParam int quantity )  {
+
+         productOrderHelper.asyncOrderProduct(skuName,quantity);
+
+
+          return new ResponseEntity<>(HttpStatus.OK);
+        //return future.thenApply(productDTO ->  ResponseEntity.ok(productDTO));
     }
+    @PostMapping("/product/placeorder")
+    public ResponseEntity<HashMap<Long, OrderStatusDTO>> orderProductsById(@RequestBody @Valid ProductOrderListDTO productOrders)  {
+        HashMap<Long, OrderStatusDTO> allOrders = null;
+        try {
+              allOrders = productOrderHelper.orderProducts(productOrders);
+        } catch(Exception ex) {
+            log.error("Error while ordering Products {}", ex);
+        }
+        return new ResponseEntity<>(allOrders, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/product/test")
+    public  ResponseEntity orderProductBySkuName()  {
+        productService.retryableTestMethod("abc");
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @Recover
     private ResponseEntity<String>  orderProductBySkuNameRecover(RuntimeException e){
         e.printStackTrace();
