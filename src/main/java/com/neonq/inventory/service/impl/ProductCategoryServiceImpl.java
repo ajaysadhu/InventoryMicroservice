@@ -7,6 +7,8 @@ import com.neonq.inventory.service.ProductCategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,5 +30,11 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public ProductCategoryDTO createProductCategory(ProductCategoryDTO dto) {
         ProductCategory newCategory = productCategoryDAO.save(modelMapper.map(dto, ProductCategory.class));
         return modelMapper.map(newCategory, ProductCategoryDTO.class);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void deleteProductCategory(Long id) {
+        productCategoryDAO.deleteById(id);
     }
 }

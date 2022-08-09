@@ -8,4 +8,6 @@ public interface ProductCategoryService {
     List<ProductCategoryDTO> getAllCategories();
 
     ProductCategoryDTO createProductCategory(ProductCategoryDTO dto);
+
+    void deleteProductCategory(Long id);
 }
