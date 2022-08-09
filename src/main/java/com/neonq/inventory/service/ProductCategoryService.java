@@ -9,4 +9,6 @@ public interface ProductCategoryService {
     List<ProductCategoryDTO> getAllCategories();
 
     ProductCategoryDTO createProductCategory(ProductCategoryDTO dto) throws ResourceExistsWarning;
+
+    void deleteProductCategory(Long id);
 }
