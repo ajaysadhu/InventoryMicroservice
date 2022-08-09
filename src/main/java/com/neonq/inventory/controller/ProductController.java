@@ -3,6 +3,7 @@ package com.neonq.inventory.controller;
 import com.neonq.inventory.dto.PageableProductDTO;
 import com.neonq.inventory.dto.ProductCategoryDTO;
 import com.neonq.inventory.dto.ProductDTO;
+import com.neonq.inventory.exception.ResourceExistsWarning;
 import com.neonq.inventory.exception.ResourceNotFoundException;
 import com.neonq.inventory.model.Product;
 import com.neonq.inventory.service.ProductCategoryService;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -44,7 +46,7 @@ public class ProductController {
 
     // Create product
     @PostMapping("/product")
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody @NotNull ProductDTO product) throws ResourceNotFoundException {
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody @NotNull @Valid ProductDTO product) throws ResourceNotFoundException {
         return new ResponseEntity<>(productService.createProduct(product), HttpStatus.CREATED);
     }
 
@@ -68,8 +70,13 @@ public class ProductController {
     }
 
     // Create new product category
+    /**
+        For this method, Product Category DTO needs only categoryName as input, so it is made as NotEmpty in DTO and Validation id done here.
+        304 - Content not modified message is sent to user if the category already exists.
+        Resource Guide: https://zetcode.com/springboot/controlleradvice/#:~:text=%40ControllerAdvice%20is%20a%20specialization%20of,annotated%20with%20%40RequestMapping%20and%20similar.
+     */
     @PostMapping("/category")
-    public ResponseEntity<ProductCategoryDTO> createProductCategory(@RequestBody ProductCategoryDTO categoryDTO) {
+    public ResponseEntity<ProductCategoryDTO> createProductCategory(@RequestBody @Valid ProductCategoryDTO categoryDTO) throws ResourceExistsWarning {
         return new ResponseEntity<>(productCategoryService.createProductCategory(categoryDTO), HttpStatus.CREATED);
     }
 

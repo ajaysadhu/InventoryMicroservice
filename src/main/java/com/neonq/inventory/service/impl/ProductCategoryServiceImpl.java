@@ -2,6 +2,7 @@ package com.neonq.inventory.service.impl;
 
 import com.neonq.inventory.dao.ProductCategoryDAO;
 import com.neonq.inventory.dto.ProductCategoryDTO;
+import com.neonq.inventory.exception.ResourceExistsWarning;
 import com.neonq.inventory.model.ProductCategory;
 import com.neonq.inventory.service.ProductCategoryService;
 import org.modelmapper.ModelMapper;
@@ -27,9 +28,14 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     @Override
-    public ProductCategoryDTO createProductCategory(ProductCategoryDTO dto) {
-        ProductCategory newCategory = productCategoryDAO.save(modelMapper.map(dto, ProductCategory.class));
-        return modelMapper.map(newCategory, ProductCategoryDTO.class);
+    public ProductCategoryDTO createProductCategory(ProductCategoryDTO dto) throws ResourceExistsWarning {
+        ProductCategory modelProductCategory = modelMapper.map(dto, ProductCategory.class);
+        if(productCategoryDAO.findByCategoryName(modelProductCategory.getCategoryName()).size()>0) {
+            throw new ResourceExistsWarning(modelProductCategory.getCategoryName()+" Already Exists");
+        } else {
+            ProductCategory newCategory = productCategoryDAO.save(modelProductCategory);
+            return modelMapper.map(newCategory, ProductCategoryDTO.class);
+        }
     }
 
     @Override

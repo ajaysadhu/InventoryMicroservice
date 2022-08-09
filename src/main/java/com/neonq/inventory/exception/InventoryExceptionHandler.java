@@ -40,8 +40,19 @@ public class InventoryExceptionHandler extends ResponseEntityExceptionHandler {
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));
-        LOGGER.error("ResourceNotFoundException: ", ex.getMessage());
+        LOGGER.warn("ResourceNotFoundException: ", ex.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ResourceExistsWarning.class)
+    @ResponseStatus(value = HttpStatus.NOT_MODIFIED)
+    public final ResponseEntity<ExceptionResponse> handleUserProfileExistsException(ResourceExistsWarning ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_MODIFIED.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+        LOGGER.warn("ResourceExistsWarning: ", ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_MODIFIED);
     }
 
     @Override
