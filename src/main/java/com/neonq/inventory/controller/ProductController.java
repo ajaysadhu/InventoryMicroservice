@@ -9,6 +9,8 @@ import com.neonq.inventory.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Recover;
@@ -33,6 +35,15 @@ public class ProductController {
 
     @Autowired
     ProductOrderHelper productOrderHelper;
+
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
+    @RequestMapping("/service-instances/{applicationName}")
+    public List<ServiceInstance> serviceInstancesByApplicationName(
+            @PathVariable String applicationName) {
+        return this.discoveryClient.getInstances(applicationName);
+    }
 
     // Read
     @GetMapping("/products/{id}")
@@ -96,6 +107,14 @@ public class ProductController {
     // Spring Retry for specific exception like Lock exception.
     // Retry the same call to deduct quantity for the product like 4 times. Delay option for every retry.
     // Circuit Breaker is design pattern which is implemented with Spring Retry.
+
+    /*
+   Disadvantages:
+    1. Traffic Overload Problem. Concurrency Issue.
+        - We did retry after error handling. max= 3 attempts.
+        - Even after retry we are not sure if the problem is completely solved. - Fault Tolerance - we are getting it done at the server end.
+        - Caller is not getting a reply after the call. And anyways client has to call the server again to get its status.
+    */
     @PostMapping("/product/order")
     public ResponseEntity orderProductBySkuName(@RequestParam String skuName, @RequestParam int quantity )  {
 
@@ -105,6 +124,10 @@ public class ProductController {
           return new ResponseEntity<>(HttpStatus.OK);
         //return future.thenApply(productDTO ->  ResponseEntity.ok(productDTO));
     }
+
+   /*
+   - Client Retries can be upto the callers capacity.
+    */
     @PostMapping("/product/placeorder")
     public ResponseEntity<HashMap<Long, OrderStatusDTO>> orderProductsById(@RequestBody @Valid ProductOrderListDTO productOrders)  {
         HashMap<Long, OrderStatusDTO> allOrders = null;
@@ -127,7 +150,7 @@ public class ProductController {
     private ResponseEntity<String>  orderProductBySkuNameRecover(RuntimeException e){
         e.printStackTrace();
         //System.out.println("recover" + quantity+ e.getMessage());
-        return new ResponseEntity<String>( "Product not availabe..", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<String>( "Product not available..", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
