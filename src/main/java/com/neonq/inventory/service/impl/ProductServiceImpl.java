@@ -91,16 +91,15 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) throws ResourceNotFoundException {
         Assert.notNull(id, "Received Product Id as null in updateProduct");
-        Product productToUpdate = productDAO.findById(id)
+        Product productFound = productDAO.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product Id passed doesn't exist"));
         ProductCategory categoryFound = productCategoryDAO.findById(productDTO.getCategory().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product Category Id passed doesn't exist"));
-        Product.builder().active(productDTO.isActive())
+        Product productToUpdate =  productFound.toBuilder().active(productDTO.isActive())
                 .description(productDTO.getDescription())
                 .category(categoryFound)
                 .unitsInStock(productDTO.getUnitsInStock())
-                .unitPrice(productDTO.getUnitPrice());
-        productToUpdate.setCategory(categoryFound);
+                .unitPrice(productDTO.getUnitPrice()).build();
         return modelMapper.map(productDAO.save(productToUpdate), ProductDTO.class);
     }
 }
