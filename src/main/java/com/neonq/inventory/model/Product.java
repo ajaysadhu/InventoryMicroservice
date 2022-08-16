@@ -1,15 +1,16 @@
 package com.neonq.inventory.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Entity
 @Table(name="product")
 public class Product extends Auditable{
@@ -18,9 +19,8 @@ public class Product extends Auditable{
     @Column(name = "id")
     private Long id;
 
-
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name = "category_id", nullable = false)
     private ProductCategory category;
 

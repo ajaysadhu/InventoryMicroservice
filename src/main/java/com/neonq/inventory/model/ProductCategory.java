@@ -1,16 +1,16 @@
 package com.neonq.inventory.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name="product_category")
 public class ProductCategory extends Auditable{
@@ -22,5 +22,4 @@ public class ProductCategory extends Auditable{
 
     @Column(name = "category_name")
     private String categoryName;
-
 }
