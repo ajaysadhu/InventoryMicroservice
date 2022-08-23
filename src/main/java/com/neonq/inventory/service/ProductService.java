@@ -8,7 +8,7 @@ import org.springframework.retry.annotation.Retryable;
 import java.util.concurrent.CompletableFuture;
 
 
-public interface ProductService extends Runnable {
+public interface ProductService {
 
     Product getProductById(Long id) ;
 
@@ -22,13 +22,7 @@ public interface ProductService extends Runnable {
 
     ProductDTO updateProduct(Long id, ProductDTO productDTO) ;
 
-    CompletableFuture<ProductDTO> orderProduct(String sku, int quantity) ;
-
-    // ProductDTO orderProduct(String sku, int quantity) ;
-
-    @Retryable(include = Exception.class, exclude = IllegalStateException.class,
-            maxAttempts = 5)
-    ProductDTO retryableTestMethod(String skuName);
+    ProductDTO orderProduct(String sku, int quantity) ;
 
     String orderProductById(Long productId, int quantity) throws InterruptedException;
 }

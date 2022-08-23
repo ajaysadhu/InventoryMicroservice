@@ -24,14 +24,6 @@ public class ProductOrderHelper {
     ProductService productService;
 
 
-    @Async("threadPoolExecutor")
-    @Retryable( include = { ObjectOptimisticLockingFailureException.class, InterruptedException.class}, maxAttempts = 3,
-            backoff = @Backoff(delay= 2000))
-    public CompletableFuture<ProductDTO> asyncOrderProduct(String skuName, int quantity) {
-        return productService.orderProduct(skuName,quantity);
-    }
-
-
     public HashMap<Long, OrderStatusDTO> orderProducts(ProductOrderListDTO productOrders) {
         HashMap<Long, OrderStatusDTO> allOrdersResponse = new HashMap<>();
         for(ProductOrderDTO order : productOrders.getOrders()) {

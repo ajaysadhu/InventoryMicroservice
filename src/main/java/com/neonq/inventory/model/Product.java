@@ -1,13 +1,7 @@
 package com.neonq.inventory.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.OptimisticLockType;
-import org.hibernate.annotations.OptimisticLocking;
-import org.hibernate.annotations.SelectBeforeUpdate;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,8 +9,11 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @ToString
+@Builder(toBuilder = true)
 @Entity
 @Table(name="product")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +26,8 @@ public class Product extends Auditable{
     @JoinColumn (name = "category_id", nullable = false)
     private ProductCategory category;
 
+    // https://www.baeldung.com/jpa-optimistic-locking
+    // Optimistic Lock synonymous to Read Lock. Avoids Dirty Reads.
     @Version
     @Column(name = "version")
     private Short version;

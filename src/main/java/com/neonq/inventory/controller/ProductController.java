@@ -13,7 +13,6 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.retry.annotation.Recover;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -76,7 +75,7 @@ public class ProductController {
 
     //Delete products
     @DeleteMapping(value = "products/{id}")
-    public ResponseEntity<Long> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Object> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -98,32 +97,6 @@ public class ProductController {
         return new ResponseEntity<>(productCategoryService.createProductCategory(categoryDTO), HttpStatus.CREATED);
     }
 
-    // Multiple instances
-    //If 2 users are requiring chess product of quantity 4.
-    // Spring @Transactional and JPA Locks (Optimistic Locks/ Pessimistic Locks)
-    // findBySku(String skuName)
-    // updateQuantityForId()
-
-    // Spring Retry for specific exception like Lock exception.
-    // Retry the same call to deduct quantity for the product like 4 times. Delay option for every retry.
-    // Circuit Breaker is design pattern which is implemented with Spring Retry.
-
-    /*
-   Disadvantages:
-    1. Traffic Overload Problem. Concurrency Issue.
-        - We did retry after error handling. max= 3 attempts.
-        - Even after retry we are not sure if the problem is completely solved. - Fault Tolerance - we are getting it done at the server end.
-        - Caller is not getting a reply after the call. And anyways client has to call the server again to get its status.
-    */
-    @PostMapping("/product/order")
-    public ResponseEntity orderProductBySkuName(@RequestParam String skuName, @RequestParam int quantity )  {
-
-         productOrderHelper.asyncOrderProduct(skuName,quantity);
-
-
-          return new ResponseEntity<>(HttpStatus.OK);
-        //return future.thenApply(productDTO ->  ResponseEntity.ok(productDTO));
-    }
 
    /*
    - Client Retries can be upto the callers capacity.
@@ -138,19 +111,4 @@ public class ProductController {
         }
         return new ResponseEntity<>(allOrders, HttpStatus.OK);
     }
-
-
-    @GetMapping("/product/test")
-    public  ResponseEntity orderProductBySkuName()  {
-        productService.retryableTestMethod("abc");
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @Recover
-    private ResponseEntity<String>  orderProductBySkuNameRecover(RuntimeException e){
-        e.printStackTrace();
-        //System.out.println("recover" + quantity+ e.getMessage());
-        return new ResponseEntity<String>( "Product not available..", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
 }
