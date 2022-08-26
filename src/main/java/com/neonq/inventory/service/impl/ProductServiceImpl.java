@@ -7,7 +7,6 @@ import com.neonq.inventory.dto.ProductDTO;
 import com.neonq.inventory.exception.ResourceNotFoundException;
 import com.neonq.inventory.model.Product;
 import com.neonq.inventory.model.ProductCategory;
-import com.neonq.inventory.service.ProductCategoryService;
 import com.neonq.inventory.service.ProductService;
 import com.neonq.inventory.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +23,6 @@ import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
