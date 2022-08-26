@@ -3,9 +3,6 @@ package com.neonq.inventory.service;
 import com.neonq.inventory.dto.PageableProductDTO;
 import com.neonq.inventory.dto.ProductDTO;
 import com.neonq.inventory.model.Product;
-import org.springframework.retry.annotation.Retryable;
-
-import java.util.concurrent.CompletableFuture;
 
 
 public interface ProductService {

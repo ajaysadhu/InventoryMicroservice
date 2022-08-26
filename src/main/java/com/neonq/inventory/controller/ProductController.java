@@ -69,7 +69,7 @@ public class ProductController {
 
     // Update products
     @PutMapping("products/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) throws RuntimeException, ResourceNotFoundException {
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) throws ResourceNotFoundException {
         return new ResponseEntity<>(productService.updateProduct(id, productDTO), HttpStatus.OK);
     }
 
@@ -102,13 +102,13 @@ public class ProductController {
    - Client Retries can be upto the callers capacity.
     */
     @PostMapping("/product/placeorder")
-    public ResponseEntity<HashMap<Long, OrderStatusDTO>> orderProductsById(@RequestBody @Valid ProductOrderListDTO productOrders)  {
-        HashMap<Long, OrderStatusDTO> allOrders = null;
+    public ResponseEntity<OrderResponseDTO> orderProductsById(@RequestBody @Valid ProductOrderListDTO productOrders)  {
+        HashMap<Long, OrderStatusDTO> allOrders = new HashMap<>();
         try {
               allOrders = productOrderHelper.orderProducts(productOrders);
         } catch(Exception ex) {
-            log.error("Error while ordering Products {}", ex);
+            log.error("Error while ordering Products: "+ ex.getMessage());
         }
-        return new ResponseEntity<>(allOrders, HttpStatus.OK);
+        return new ResponseEntity<>(new OrderResponseDTO(allOrders), HttpStatus.OK);
     }
 }

@@ -39,9 +39,6 @@ public class ProductServiceImpl implements ProductService {
     ProductCategoryDAO productCategoryDAO;
 
     @Autowired
-    ProductCategoryService productCategoryService;
-
-    @Autowired
     private ModelMapper modelMapper;
 
     @Override
@@ -141,9 +138,9 @@ public class ProductServiceImpl implements ProductService {
     public String orderProductById(Long productId, int quantity) throws InterruptedException {
         Product product = null;
         try {
-            product = productDAO.findById(productId).get();
+            product = productDAO.findById(productId).isPresent() ?  productDAO.findById(productId).get(): null;
         } catch (Exception ex) {
-            log.error("Error at finding Product {}", ex);
+            log.error("Error at finding Product"+ ex.getMessage());
 
         }
         if (product == null) {
@@ -155,7 +152,7 @@ public class ProductServiceImpl implements ProductService {
             try {
                 product.setUnitsInStock(unitsInStock - quantity);
             } catch (Exception e) {
-                log.error("Some Exception", e.getMessage());
+                log.error("Some Exception"+ e.getMessage());
             }
         } else {
             throw new ResourceNotFoundException("Product quantity problem");
