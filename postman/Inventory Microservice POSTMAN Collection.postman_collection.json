@@ -176,7 +176,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:9090/products/16",
+					"raw": "http://localhost:9000/inventory/v1/products/16",
 					"protocol": "http",
 					"host": [
 						"localhost"

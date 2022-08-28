@@ -2,9 +2,12 @@ package com.neonq.inventory.service.impl;
 
 import com.neonq.inventory.dao.ProductCategoryDAO;
 import com.neonq.inventory.dao.ProductDAO;
+import com.neonq.inventory.dto.OrderItemResponseDTO;
 import com.neonq.inventory.dto.PageableProductDTO;
 import com.neonq.inventory.dto.ProductDTO;
+import com.neonq.inventory.dto.OrderItemsStatuses;
 import com.neonq.inventory.exception.ResourceNotFoundException;
+import com.neonq.inventory.exception.StockUnavailableException;
 import com.neonq.inventory.model.Product;
 import com.neonq.inventory.model.ProductCategory;
 import com.neonq.inventory.service.ProductService;
@@ -28,7 +31,6 @@ import java.util.List;
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
-    int counter = 0;
     @Autowired
     ProductDAO productDAO;
 
@@ -113,18 +115,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional
-    public ProductDTO orderProduct(String sku, int quantity) throws ResourceNotFoundException {
+    public ProductDTO orderProduct(String sku, int quantity) throws StockUnavailableException {
 
         Product product = productDAO.findBySku(sku)
                 .orElseThrow(() -> new ResourceNotFoundException("Product Sku doesn't exist"));
 
-        Product productModel = null;
+        Product productModel ;
         int unitsInStock = product.getUnitsInStock();
-        if (unitsInStock > quantity) {
+        if (unitsInStock >= quantity) {
             System.out.println("new quantity::" + (unitsInStock - quantity));
 
             product.setUnitsInStock(unitsInStock - quantity);
             productModel = productDAO.save(product);
+        }  else {
+            throw new StockUnavailableException("Product quantity problem");
         }
         return modelMapper.map(productModel, ProductDTO.class);
 
@@ -132,29 +136,25 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public String orderProductById(Long productId, int quantity) throws InterruptedException {
-        Product product = null;
-        try {
-            product = productDAO.findById(productId).isPresent() ?  productDAO.findById(productId).get(): null;
-        } catch (Exception ex) {
-            log.error("Error at finding Product"+ ex.getMessage());
+    public OrderItemResponseDTO orderProductById(Long productId, int quantity) throws ResourceNotFoundException{
+        OrderItemResponseDTO orderItemResponseDTO= new OrderItemResponseDTO();
+        Product product = productDAO.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product Id does not exist"));
 
-        }
-        if (product == null) {
-            throw new ResourceNotFoundException("Product doesn't exist");
-        }
         int unitsInStock = product.getUnitsInStock();
         if (unitsInStock >= quantity) {
             log.info("new quantity::" + (unitsInStock - quantity));
-            try {
-                product.setUnitsInStock(unitsInStock - quantity);
-            } catch (Exception e) {
-                log.error("Some Exception"+ e.getMessage());
-            }
+
+            product.setUnitsInStock(unitsInStock - quantity);
+            orderItemResponseDTO.setStatus(OrderItemsStatuses.SUCCESS);
+            orderItemResponseDTO.setMessage("Order Placed Successfully");
+            orderItemResponseDTO.setAvailableStock(unitsInStock - quantity);
+
         } else {
-            throw new ResourceNotFoundException("Product quantity problem");
+            orderItemResponseDTO.setStatus(OrderItemsStatuses.FAILURE);
+            orderItemResponseDTO.setMessage("Stock Availability Limit");
+            orderItemResponseDTO.setAvailableStock(unitsInStock);
         }
-        return "Success";
+        return orderItemResponseDTO;
     }
 
 }

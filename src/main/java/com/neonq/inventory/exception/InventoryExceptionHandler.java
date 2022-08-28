@@ -29,7 +29,7 @@ public class InventoryExceptionHandler extends ResponseEntityExceptionHandler {
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));
-        LOGGER.error("Exception: ", ex.getMessage());
+        LOGGER.error("Exception: "+ ex.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -40,18 +40,29 @@ public class InventoryExceptionHandler extends ResponseEntityExceptionHandler {
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));
-        LOGGER.warn("ResourceNotFoundException: ", ex.getMessage());
+        LOGGER.warn("ResourceNotFoundException: "+ ex.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ResourceExistsWarning.class)
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
     @ResponseStatus(value = HttpStatus.NOT_MODIFIED)
-    public final ResponseEntity<ExceptionResponse> handleUserProfileExistsException(ResourceExistsWarning ex, WebRequest request) {
+    public final ResponseEntity<ExceptionResponse> handleUserProfileExistsException(ResourceAlreadyExistsException ex, WebRequest request) {
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_MODIFIED.value(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));
-        LOGGER.warn("ResourceExistsWarning: ", ex.getMessage());
+        LOGGER.warn("ResourceAlreadyExistsException: "+ ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_MODIFIED);
+    }
+
+    @ExceptionHandler(StockUnavailableException.class)
+    @ResponseStatus(value = HttpStatus.NOT_MODIFIED)
+    public final ResponseEntity<ExceptionResponse> handleUserProfileExistsException(StockUnavailableException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.NOT_MODIFIED.value(),
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+        LOGGER.warn("StockUnavailableException: "+ ex.getMessage());
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_MODIFIED);
     }
 
@@ -59,7 +70,7 @@ public class InventoryExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@NotNull MethodArgumentNotValidException ex, @NotNull HttpHeaders headers, @NotNull HttpStatus status, @NotNull WebRequest request) {
         String fieldErrors = ex.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining("|"));
         ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), new Date(), "Validation Error", fieldErrors);
-        LOGGER.error("Invalid Request Exception: ", exceptionResponse);
+        LOGGER.error("Invalid Request Exception: "+ exceptionResponse);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 }

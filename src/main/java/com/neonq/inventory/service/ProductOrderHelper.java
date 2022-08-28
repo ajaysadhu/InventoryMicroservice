@@ -1,10 +1,8 @@
 package com.neonq.inventory.service;
 
-import com.neonq.inventory.dto.OrderStatusDTO;
-import com.neonq.inventory.dto.ProductDTO;
-import com.neonq.inventory.dto.ProductOrderDTO;
-import com.neonq.inventory.dto.ProductOrderListDTO;
+import com.neonq.inventory.dto.*;
 import com.neonq.inventory.exception.ResourceNotFoundException;
+import com.neonq.inventory.exception.StockUnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -20,29 +18,42 @@ public class ProductOrderHelper {
     ProductService productService;
 
 
-    public HashMap<Long, OrderStatusDTO> orderProducts(ProductOrderListDTO productOrders) {
-        HashMap<Long, OrderStatusDTO> allOrdersResponse = new HashMap<>();
+    public OrderResponseDTO orderProducts(ProductOrderListDTO productOrders) {
+        HashMap<Long, OrderItemResponseDTO> allOrdersResponse = new HashMap<>();
+        int failureCount = 0;
+
+        OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
         for(ProductOrderDTO order : productOrders.getOrders()) {
-            OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
+            OrderItemResponseDTO orderItemResponseDTO = new OrderItemResponseDTO();
             try {
-                orderStatusDTO.setStatus(productService.orderProductById(order.getProductId(), order.getQuantity()));
-                orderStatusDTO.setMessage("Successfully Order Placed");
+                orderItemResponseDTO = productService.orderProductById(order.getProductId(), order.getQuantity());
             } catch (ObjectOptimisticLockingFailureException lockingFailureException) {
-                orderStatusDTO.setStatus("Failed");
-                orderStatusDTO.setMessage("Failed due to High Concurrent Updates");
+                orderItemResponseDTO.setStatus(OrderItemsStatuses.FAILURE);
+                orderItemResponseDTO.setMessage("Failed due to High Concurrent Updates");
+                failureCount++;
                 log.error("Optimistic Lock Exception {}", lockingFailureException.getMessage());
-            }catch (ResourceNotFoundException resourceEx) {
-                orderStatusDTO.setStatus("Failed");
-                orderStatusDTO.setMessage(resourceEx.getMessage());
-                log.error("ResourceNotFoundException Exception {}", resourceEx.getMessage());
-            }
-            catch (Exception ex) {
-                orderStatusDTO.setStatus("Failed");
-                orderStatusDTO.setMessage("Unsuccessful in Order Placement. Try Again later");
+            } catch (ResourceNotFoundException resourceNotFoundException) {
+                log.error("ResourceNotFoundException {}", resourceNotFoundException.getMessage());
+                orderItemResponseDTO.setAvailableStock(null);
+                orderItemResponseDTO.setStatus(OrderItemsStatuses.FAILURE);
+                orderItemResponseDTO.setMessage(resourceNotFoundException.getMessage());
+                failureCount++;
+            } catch (Exception ex) {
+                orderItemResponseDTO.setStatus(OrderItemsStatuses.FAILURE);
+                orderItemResponseDTO.setMessage("Unsuccessful in Order Placement. Try Again later");
                 log.error("Exception {}", ex.getMessage());
+                failureCount++;
             }
-            allOrdersResponse.put(order.getProductId(), orderStatusDTO);
+            allOrdersResponse.put(order.getProductId(), orderItemResponseDTO);
         }
-        return allOrdersResponse;
+        orderResponseDTO.setOrders(allOrdersResponse);
+        if(failureCount == productOrders.getOrders().size()) {
+            orderResponseDTO.setStatus(CompleteOrdersStatuses.FAILURE);
+        } else if (failureCount < productOrders.getOrders().size()) {
+            orderResponseDTO.setStatus(CompleteOrdersStatuses.PARTIAL_SUCCESS);
+        } else {
+            orderResponseDTO.setStatus(CompleteOrdersStatuses.SUCCESS);
+        }
+        return orderResponseDTO;
     }
 }

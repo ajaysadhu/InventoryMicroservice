@@ -63,7 +63,6 @@ public class ProductController {
     // Create product
     @PostMapping("/product")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody @NotNull @Valid ProductDTO product) throws ResourceNotFoundException {
-        System.out.println(LocalDateTime.now());
         return new ResponseEntity<>(productService.createProduct(product), HttpStatus.CREATED);
     }
 
@@ -103,12 +102,12 @@ public class ProductController {
     */
     @PostMapping("/product/placeorder")
     public ResponseEntity<OrderResponseDTO> orderProductsById(@RequestBody @Valid ProductOrderListDTO productOrders)  {
-        HashMap<Long, OrderStatusDTO> allOrders = new HashMap<>();
+        OrderResponseDTO allOrders = new OrderResponseDTO();
         try {
               allOrders = productOrderHelper.orderProducts(productOrders);
         } catch(Exception ex) {
             log.error("Error while ordering Products: "+ ex.getMessage());
         }
-        return new ResponseEntity<>(new OrderResponseDTO(allOrders), HttpStatus.OK);
+        return new ResponseEntity<>(allOrders, HttpStatus.OK);
     }
 }
