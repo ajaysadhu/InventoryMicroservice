@@ -1,15 +1,15 @@
 package com.neonq.inventory.service;
 
+import com.neonq.inventory.dto.OrderItemResponseDTO;
 import com.neonq.inventory.dto.PageableProductDTO;
 import com.neonq.inventory.dto.ProductDTO;
 import com.neonq.inventory.exception.ResourceNotFoundException;
 import com.neonq.inventory.model.Product;
-import com.neonq.inventory.model.ProductCategory;
 
 
 public interface ProductService {
 
-    Product getProductById(Long id) throws ResourceNotFoundException;
+    Product getProductById(Long id) ;
 
     void deleteProduct(Long id);
 
@@ -17,7 +17,11 @@ public interface ProductService {
 
     PageableProductDTO getProductsBySearchKeyword(String search, Integer pageNum, Integer pageSize) ;
 
-    ProductDTO createProduct(ProductDTO productDTO) throws ResourceNotFoundException;
+    ProductDTO createProduct(ProductDTO productDTO) ;
 
-    ProductDTO updateProduct(Long id, ProductDTO productDTO) throws ResourceNotFoundException;
+    ProductDTO updateProduct(Long id, ProductDTO productDTO) ;
+
+    ProductDTO orderProduct(String sku, int quantity) ;
+
+    OrderItemResponseDTO orderProductById(Long productId, int quantity) throws ResourceNotFoundException;
 }

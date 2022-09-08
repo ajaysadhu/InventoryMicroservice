@@ -7,247 +7,13 @@
 	},
 	"item": [
 		{
-			"name": "Delete an Existing Product",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9090/products/16",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9090",
-					"path": [
-						"products",
-						"16"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get an Existing Product By Id",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9090/products/47",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9090",
-					"path": [
-						"products",
-						"47"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get an Existing Product Categories",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9090/products/47",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9090",
-					"path": [
-						"products",
-						"47"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update an Existing Product",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": " {\n    \"sku\": \"GAME-TECH-1012\",\n    \"name\": \"Chess GM1\",\n    \"description\": \"Chess\",\n    \"unitPrice\": 25,\n    \"imageUrl\": \"https://media.wired.com/photos/6035838c75e03e5fbfff9da1/1:1/w_1602,h_1602,c_limit/Gear-Chess-1216924256.jpg\",\n    \"active\": 1,\n    \"unitsInStock\": 100,\n    \"category\":\"CHESS\"\n  }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9000/products/2",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"products",
-						"2"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Search for Books",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9000/products?search=Chess&currentPage=1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"products"
-					],
-					"query": [
-						{
-							"key": "search",
-							"value": "Chess"
-						},
-						{
-							"key": "currentPage",
-							"value": "1"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Search for Category",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9000/products?search=Chess&currentPage=1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"products"
-					],
-					"query": [
-						{
-							"key": "search",
-							"value": "Chess"
-						},
-						{
-							"key": "currentPage",
-							"value": "1"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create a product",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": " {\n    \"sku\": \"GAME-TECH-1002\",\n    \"name\": \"Chess GM1\",\n    \"description\": \"Chess\",\n    \"unitPrice\": 25,\n    \"imageUrl\": \"https://media.wired.com/photos/6035838c75e03e5fbfff9da1/1:1/w_1602,h_1602,c_limit/Gear-Chess-1216924256.jpg\",\n    \"active\": 1,\n    \"unitsInStock\": 100,\n    \"category\": {\n        \"id\": \"1\",\n        \"categoryName\":\"CHESS\"\n    }\n  }",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:9000/inventory/v1/product",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "9000",
-					"path": [
-						"inventory",
-						"v1",
-						"product"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Create a Product Category",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"categoryName\": \"MOVIES\"\n}",
+					"raw": "{\n    \"categoryName\": \"CHESS\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -277,7 +43,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"categoryName1\": \"ELECTRONICS\"\n}",
+					"raw": "{\n    \"categoryName1\": \"HOMEDECOR\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -301,6 +67,178 @@
 			"response": []
 		},
 		{
+			"name": "Create a product",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n    \"sku\": \"GAME-TECH-1004\",\n    \"name\": \"Chess GM14\",\n    \"description\": \"Chess\",\n    \"unitPrice\": 25,\n    \"imageUrl\": \"https://media.wired.com/photos/6035838c75e03e5fbfff9da1/1:1/w_1602,h_1602,c_limit/Gear-Chess-1216924256.jpg\",\n    \"active\": 1,\n    \"unitsInStock\": 100,\n    \"category\": {\n        \"id\": \"3\",\n        \"categoryName\":\"CHESS\"\n    }\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/inventory/v1/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"inventory",
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get an Existing Product By Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/inventory/v1/products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"inventory",
+						"v1",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update an Existing Product",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n    \"sku\": \"GAME-TECH-1012\",\n    \"name\": \"Chess GM1\",\n    \"description\": \"Chess\",\n    \"unitPrice\": 45,\n    \"imageUrl\": \"https://media.wired.com/photos/6035838c75e03e5fbfff9da1/1:1/w_1602,h_1602,c_limit/Gear-Chess-1216924256.jpg\",\n    \"active\": 1,\n    \"unitsInStock\": 100,\n    \"category\": {\n        \"id\": \"3\",\n        \"categoryName\":\"CHESS\"\n    }\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/inventory/v1/products/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"inventory",
+						"v1",
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete an Existing Product",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/inventory/v1/products/16",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"products",
+						"16"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Category or Product Name by Keyword",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/inventory/v1/products/search?keyword=Chess&currentPage=1&pageSize=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"inventory",
+						"v1",
+						"products",
+						"search"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "Chess"
+						},
+						{
+							"key": "currentPage",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "List Categories",
 			"request": {
 				"method": "GET",
@@ -316,6 +254,37 @@
 						"inventory",
 						"v1",
 						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Order Buy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"orders\" : [\n    { \n        \"productId\": 1 ,\n        \"quantity\": -5\n    },\n    { \n        \"productId\": 1 ,\n        \"quantity\": 5\n    },\n    { \n        \"productId\": 1 ,\n        \"quantity\": 5\n    },\n    { \n        \"productId\": 1 ,\n        \"quantity\": 5\n    }\n]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/inventory/v1/product/placeorder",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"inventory",
+						"v1",
+						"product",
+						"placeorder"
 					]
 				}
 			},

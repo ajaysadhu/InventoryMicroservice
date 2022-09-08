@@ -8,21 +8,29 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@ToString
 @Builder(toBuilder = true)
 @Entity
 @Table(name="product")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
+
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn (name = "category_id", nullable = false)
     private ProductCategory category;
+
+    // https://www.baeldung.com/jpa-optimistic-locking
+    // Optimistic Lock synonymous to Read Lock. Avoids Dirty Reads.
+    @Version
+    @Column(name = "version")
+    private Short version;
 
     @Column(name = "sku")
     private String sku;
