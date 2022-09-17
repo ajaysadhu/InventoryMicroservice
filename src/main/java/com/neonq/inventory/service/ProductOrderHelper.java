@@ -48,7 +48,7 @@ public class ProductOrderHelper {
         orderResponseDTO.setOrders(allOrdersResponse);
         if(failureCount == productOrders.getOrders().size()) {
             orderResponseDTO.setStatus(OrderStatus.FAILURE);
-        } else if (failureCount < productOrders.getOrders().size()) {
+        } else if (failureCount > 0) {
             orderResponseDTO.setStatus(OrderStatus.PARTIAL_SUCCESS);
         } else {
             orderResponseDTO.setStatus(OrderStatus.SUCCESS);
