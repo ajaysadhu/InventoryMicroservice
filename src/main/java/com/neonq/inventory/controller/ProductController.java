@@ -1,6 +1,8 @@
 package com.neonq.inventory.controller;
 
 import com.neonq.inventory.dto.*;
+import com.neonq.inventory.dto.orders.OrderRequestDTO;
+import com.neonq.inventory.dto.orders.OrderResponseDTO;
 import com.neonq.inventory.exception.ResourceNotFoundException;
 import com.neonq.inventory.model.Product;
 import com.neonq.inventory.service.ProductCategoryService;
@@ -16,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -101,7 +101,7 @@ public class ProductController {
    - Client Retries can be upto the callers capacity.
     */
     @PostMapping("/product/placeorder")
-    public ResponseEntity<OrderResponseDTO> orderProductsById(@RequestBody @Valid ProductOrderListDTO productOrders)  {
+    public ResponseEntity<OrderResponseDTO> orderProductsById(@RequestBody @Valid OrderRequestDTO productOrders)  {
         OrderResponseDTO allOrders = new OrderResponseDTO();
         try {
               allOrders = productOrderHelper.orderProducts(productOrders);

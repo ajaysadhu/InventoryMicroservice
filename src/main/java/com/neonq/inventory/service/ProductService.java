@@ -1,6 +1,6 @@
 package com.neonq.inventory.service;
 
-import com.neonq.inventory.dto.OrderItemResponseDTO;
+import com.neonq.inventory.dto.orders.OrderItemDTO;
 import com.neonq.inventory.dto.PageableProductDTO;
 import com.neonq.inventory.dto.ProductDTO;
 import com.neonq.inventory.exception.ResourceNotFoundException;
@@ -23,5 +23,5 @@ public interface ProductService {
 
     ProductDTO orderProduct(String sku, int quantity) ;
 
-    OrderItemResponseDTO orderProductById(Long productId, int quantity) throws ResourceNotFoundException;
+    OrderItemDTO orderProductById(Long productId, int quantity) throws ResourceNotFoundException;
 }

@@ -2,10 +2,10 @@ package com.neonq.inventory.service.impl;
 
 import com.neonq.inventory.dao.ProductCategoryDAO;
 import com.neonq.inventory.dao.ProductDAO;
-import com.neonq.inventory.dto.OrderItemResponseDTO;
+import com.neonq.inventory.dto.orders.OrderItemDTO;
 import com.neonq.inventory.dto.PageableProductDTO;
 import com.neonq.inventory.dto.ProductDTO;
-import com.neonq.inventory.dto.OrderItemsStatuses;
+import com.neonq.inventory.dto.orders.OrderItemStatus;
 import com.neonq.inventory.exception.ResourceNotFoundException;
 import com.neonq.inventory.exception.StockUnavailableException;
 import com.neonq.inventory.model.Product;
@@ -136,8 +136,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public OrderItemResponseDTO orderProductById(Long productId, int quantity) throws ResourceNotFoundException{
-        OrderItemResponseDTO orderItemResponseDTO= new OrderItemResponseDTO();
+    public OrderItemDTO orderProductById(Long productId, int quantity) throws ResourceNotFoundException{
+        OrderItemDTO orderItemResponseDTO= new OrderItemDTO();
         Product product = productDAO.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product Id does not exist"));
 
         int unitsInStock = product.getUnitsInStock();
@@ -145,12 +145,12 @@ public class ProductServiceImpl implements ProductService {
             log.info("new quantity::" + (unitsInStock - quantity));
 
             product.setUnitsInStock(unitsInStock - quantity);
-            orderItemResponseDTO.setStatus(OrderItemsStatuses.SUCCESS);
+            orderItemResponseDTO.setStatus(OrderItemStatus.SUCCESS);
             orderItemResponseDTO.setMessage("Order Placed Successfully");
             orderItemResponseDTO.setAvailableStock(unitsInStock - quantity);
 
         } else {
-            orderItemResponseDTO.setStatus(OrderItemsStatuses.FAILURE);
+            orderItemResponseDTO.setStatus(OrderItemStatus.FAILURE);
             orderItemResponseDTO.setMessage("Stock Availability Limit");
             orderItemResponseDTO.setAvailableStock(unitsInStock);
         }

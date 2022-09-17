@@ -1,8 +1,7 @@
 package com.neonq.inventory.service;
 
-import com.neonq.inventory.dto.*;
+import com.neonq.inventory.dto.orders.*;
 import com.neonq.inventory.exception.ResourceNotFoundException;
-import com.neonq.inventory.exception.StockUnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -18,28 +17,28 @@ public class ProductOrderHelper {
     ProductService productService;
 
 
-    public OrderResponseDTO orderProducts(ProductOrderListDTO productOrders) {
-        HashMap<Long, OrderItemResponseDTO> allOrdersResponse = new HashMap<>();
+    public OrderResponseDTO orderProducts(OrderRequestDTO productOrders) {
+        HashMap<Long, OrderItemDTO> allOrdersResponse = new HashMap<>();
         int failureCount = 0;
 
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
-        for(ProductOrderDTO order : productOrders.getOrders()) {
-            OrderItemResponseDTO orderItemResponseDTO = new OrderItemResponseDTO();
+        for(OrderDTO order : productOrders.getOrders()) {
+            OrderItemDTO orderItemResponseDTO = new OrderItemDTO();
             try {
                 orderItemResponseDTO = productService.orderProductById(order.getProductId(), order.getQuantity());
             } catch (ObjectOptimisticLockingFailureException lockingFailureException) {
-                orderItemResponseDTO.setStatus(OrderItemsStatuses.FAILURE);
+                orderItemResponseDTO.setStatus(OrderItemStatus.FAILURE);
                 orderItemResponseDTO.setMessage("Failed due to High Concurrent Updates");
                 failureCount++;
                 log.error("Optimistic Lock Exception {}", lockingFailureException.getMessage());
             } catch (ResourceNotFoundException resourceNotFoundException) {
                 log.error("ResourceNotFoundException {}", resourceNotFoundException.getMessage());
                 orderItemResponseDTO.setAvailableStock(null);
-                orderItemResponseDTO.setStatus(OrderItemsStatuses.FAILURE);
+                orderItemResponseDTO.setStatus(OrderItemStatus.FAILURE);
                 orderItemResponseDTO.setMessage(resourceNotFoundException.getMessage());
                 failureCount++;
             } catch (Exception ex) {
-                orderItemResponseDTO.setStatus(OrderItemsStatuses.FAILURE);
+                orderItemResponseDTO.setStatus(OrderItemStatus.FAILURE);
                 orderItemResponseDTO.setMessage("Unsuccessful in Order Placement. Try Again later");
                 log.error("Exception {}", ex.getMessage());
                 failureCount++;
@@ -48,11 +47,11 @@ public class ProductOrderHelper {
         }
         orderResponseDTO.setOrders(allOrdersResponse);
         if(failureCount == productOrders.getOrders().size()) {
-            orderResponseDTO.setStatus(CompleteOrdersStatuses.FAILURE);
+            orderResponseDTO.setStatus(OrderStatus.FAILURE);
         } else if (failureCount < productOrders.getOrders().size()) {
-            orderResponseDTO.setStatus(CompleteOrdersStatuses.PARTIAL_SUCCESS);
+            orderResponseDTO.setStatus(OrderStatus.PARTIAL_SUCCESS);
         } else {
-            orderResponseDTO.setStatus(CompleteOrdersStatuses.SUCCESS);
+            orderResponseDTO.setStatus(OrderStatus.SUCCESS);
         }
         return orderResponseDTO;
     }
