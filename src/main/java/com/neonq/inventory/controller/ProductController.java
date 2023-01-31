@@ -15,6 +15,7 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -79,9 +80,12 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+
     // Get all product categories
     @GetMapping("/categories")
-    public ResponseEntity<List<ProductCategoryDTO>> getAllProductCategories() {
+    @PreAuthorize("hasAuthority('editor')") // TODO: Remove, added only for testing
+    public ResponseEntity<List<ProductCategoryDTO>> getAllProductCategories( @RequestHeader String userId) {
+
         return new ResponseEntity<>(productCategoryService.getAllCategories(), HttpStatus.OK);
     }
 

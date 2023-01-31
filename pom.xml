@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.2</version>
+		<version>2.3.1.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.neonq</groupId>
@@ -14,12 +14,22 @@
 	<name>InventoryMicroservice</name>
 	<description>Inventory Management Service</description>
 	<properties>
-		<java.version>1.8</java.version>
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<spring-cloud.version>2021.0.3</spring-cloud.version>
+		<java.version>11</java.version>
+		<maven.compiler.target>11</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<spring-cloud.version>Hoxton.SR12</spring-cloud.version>
+<!--		<okta-jwt.version>0.5.7</okta-jwt.version>-->
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>com.okta.spring</groupId>
+			<artifactId>okta-spring-boot-starter</artifactId>
+			<version>1.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -91,6 +101,19 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+	<!-- Okta testing -->
+<!--		<dependency>-->
+<!--			<groupId>com.okta.jwt</groupId>-->
+<!--			<artifactId>okta-jwt-verifier</artifactId>-->
+<!--			<version>${okta-jwt.version}</version>-->
+<!--		</dependency>-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.okta.jwt</groupId>-->
+<!--			<artifactId>okta-jwt-verifier-impl</artifactId>-->
+<!--			<version>${okta-jwt.version}</version>-->
+<!--			<scope>runtime</scope>-->
+<!--		</dependency>-->
     </dependencies>
 	<dependencyManagement>
 		<dependencies>
