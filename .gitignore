@@ -1,6 +1,9 @@
 # Compiled class file
 *.class
 
+#CICD secured files
+.okta.env
+
 # Log file
 *.log
 

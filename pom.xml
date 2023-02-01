@@ -18,7 +18,6 @@
 		<maven.compiler.target>11</maven.compiler.target>
 		<maven.compiler.source>11</maven.compiler.source>
 		<spring-cloud.version>Hoxton.SR12</spring-cloud.version>
-<!--		<okta-jwt.version>0.5.7</okta-jwt.version>-->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -101,19 +100,12 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-	<!-- Okta testing -->
-<!--		<dependency>-->
-<!--			<groupId>com.okta.jwt</groupId>-->
-<!--			<artifactId>okta-jwt-verifier</artifactId>-->
-<!--			<version>${okta-jwt.version}</version>-->
-<!--		</dependency>-->
-
-<!--		<dependency>-->
-<!--			<groupId>com.okta.jwt</groupId>-->
-<!--			<artifactId>okta-jwt-verifier-impl</artifactId>-->
-<!--			<version>${okta-jwt.version}</version>-->
-<!--			<scope>runtime</scope>-->
-<!--		</dependency>-->
+		<!-- Dependency to secure application properties-->
+		<dependency>
+			<groupId>me.paulschwarz</groupId>
+			<artifactId>spring-dotenv</artifactId>
+			<version>2.5.4</version>
+		</dependency>
     </dependencies>
 	<dependencyManagement>
 		<dependencies>
