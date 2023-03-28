@@ -1,0 +1,196 @@
+{
+	"info": {
+		"_postman_id": "4170e357-5a6f-43be-abf4-c28f7fe880b0",
+		"name": "Okta PKCE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20070422"
+	},
+	"item": [
+		{
+			"name": "Primary Authentication",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\n \"username\": \"aak.1990@gmail.com\",\n \"password\": \"7CMhRH4c\",\n  \"options\": {\n    \"multiOptionalFactorEnroll\": true,\n    \"warnBeforePasswordExpired\": true\n  }  \n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/v1/authn",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"authn"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Oidcdebugger",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Code with sessionToken",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/oauth2/{{authorizationServerId}}/v1/authorize?client_id={{clientId}}&response_type=code&scope={{scopes}}&redirect_uri={{redirectUri}}&state=state&sessionToken={{sessionToken}}&code_challenge=fFsU4UBnbcBoAnKkjMN559bHT9iZ8fuP8U0j2htLLwc&code_challenge_method=S256&nonce=mynonce&response_mode=form_post",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"oauth2",
+						"{{authorizationServerId}}",
+						"v1",
+						"authorize"
+					],
+					"query": [
+						{
+							"key": "client_id",
+							"value": "{{clientId}}"
+						},
+						{
+							"key": "response_type",
+							"value": "code"
+						},
+						{
+							"key": "scope",
+							"value": "{{scopes}}"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "{{redirectUri}}"
+						},
+						{
+							"key": "state",
+							"value": "state"
+						},
+						{
+							"key": "sessionToken",
+							"value": "{{sessionToken}}"
+						},
+						{
+							"key": "code_challenge",
+							"value": "fFsU4UBnbcBoAnKkjMN559bHT9iZ8fuP8U0j2htLLwc"
+						},
+						{
+							"key": "code_challenge_method",
+							"value": "S256"
+						},
+						{
+							"key": "nonce",
+							"value": "mynonce"
+						},
+						{
+							"key": "response_mode",
+							"value": "form_post"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get ID Token with Code and PKCE",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{clientId}}",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "{{redirectUri}}",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "UTZzrmMxT0NZIpvY5ePimtSykggiM6zHwuUkBbGDNr4",
+							"type": "text"
+						},
+						{
+							"key": "code_verifier",
+							"value": "rjNwzvjttvgBcpyZB4FT7HfwJi6ICaha7xEyWws2Bf6",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/oauth2/{{authorizationServerId}}/v1/token",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"oauth2",
+						"{{authorizationServerId}}",
+						"v1",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get UserInfo Copy",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJraWQiOiJGTVA0S253N1NUcmpwZFJsQWdsdWVocnhfWDlIM2JVMHFjTU04YTFOQWUwIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULmVBeFBCRGdQOHNxWEhkLXlpMEJHZ1NqcVFTY3pJSy1BZUJsdDhKdDBvajgiLCJpc3MiOiJodHRwczovL2Rldi04MjU0NjQ1OC5va3RhLmNvbS9vYXV0aDIvZGVmYXVsdCIsImF1ZCI6ImFwaTovL2RlZmF1bHQiLCJpYXQiOjE2NjMwNTI3NTQsImV4cCI6MTY2MzA1NjM1NCwiY2lkIjoiMG9hNXc0bTQ3aFBNd0RUZE41ZDciLCJzY3AiOlsidXNlciJdLCJzdWIiOiIwb2E1dzRtNDdoUE13RFRkTjVkNyJ9.E1DAMp6NKmX8QR-O3_4n1HtOh_rYcovXJhX7ohLt9Zc7hpJe28drSUcq7er4c9AhOH1R6dqhIEbMnK1XHKldEwsPOSssJ8XVaIykLA-tJqW401m5R57gFOmiuJs_FjqEWu0shOxrrJpo9IiTwbC2Twn18IEHniZSwmbY8dXy6CooAv7towMp7ysyErfflKCDDSMb3ioa1U0l4-YS0n0_lQWj66GUbyzMyY2yBQFxMmqgW_yMYbIJ83d7D1j8HwbDPnmZC2oec2Lr2uVvw-lQezQwnXD_el6YxwR28E4rxtjknd_tuHOuk3aQjWr4sS1kf5O2ePKyHG-1MfaJi0BYJw"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/oauth2/{{authorizationServerId}}/v1/userinfo",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"oauth2",
+						"{{authorizationServerId}}",
+						"v1",
+						"userinfo"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
