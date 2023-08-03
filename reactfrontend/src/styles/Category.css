@@ -1,0 +1,25 @@
+
+  .container{
+    padding:50px 50px; 
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 5px 20%;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+form{
+    display:grid;
+    font-size: 1rem;
+    justify-content: center;
+    height: 100%;
+}
+label{
+    padding-top: 15px;
+}
+input{
+    margin-left: 15px;
+}ul{
+  padding-top: 15px;
+}
+li{
+  padding-left: 15px;
+}

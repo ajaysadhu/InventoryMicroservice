@@ -11,11 +11,11 @@ import com.neonq.inventory.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
+//import org.springframework.cloud.client.ServiceInstance;
+//import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,6 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/inventory/v1/")
 @Slf4j
+@CrossOrigin("http://localhost:3000")
 public class ProductController {
 
     @Autowired
@@ -36,14 +37,14 @@ public class ProductController {
     @Autowired
     ProductOrderHelper productOrderHelper;
 
-    @Autowired
-    private DiscoveryClient discoveryClient;
-
-    @RequestMapping("/service-instances/{applicationName}")
-    public List<ServiceInstance> serviceInstancesByApplicationName(
-            @PathVariable String applicationName) {
-        return this.discoveryClient.getInstances(applicationName);
-    }
+//    @Autowired
+//    private DiscoveryClient discoveryClient;
+//
+//    @RequestMapping("/service-instances/{applicationName}")
+//    public List<ServiceInstance> serviceInstancesByApplicationName(
+//            @PathVariable String applicationName) {
+//        return this.discoveryClient.getInstances(applicationName);
+//    }
 
     // Read
     @GetMapping("/products/{id}")
@@ -82,8 +83,9 @@ public class ProductController {
 
 
     // Get all product categories
+    
+    //@PreAuthorize("hasAuthority('editor')") // TODO: Remove, added only for testing
     @GetMapping("/categories")
-    @PreAuthorize("hasAuthority('editor')") // TODO: Remove, added only for testing
     public ResponseEntity<List<ProductCategoryDTO>> getAllProductCategories( @RequestHeader String userId) {
 
         return new ResponseEntity<>(productCategoryService.getAllCategories(), HttpStatus.OK);
